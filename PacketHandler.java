@@ -1,8 +1,9 @@
-package mods.ArchitectTable;
+package mods.architecttable;
 
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 
+import mods.architecttable.table.TileEntityArchitectTable;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet250CustomPayload;

@@ -1,6 +1,6 @@
-package mods.ArchitectTable;
+package mods.architecttable;
 
-import mods.ArchitectTable.client.ClientProxy;
+import mods.architecttable.client.ClientProxy;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;

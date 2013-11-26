@@ -1,4 +1,4 @@
-package mods.ArchitectTable;
+package mods.architecttable;
 
 import java.util.Comparator;
 import java.util.HashMap;
@@ -6,7 +6,8 @@ import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeMap;
 
-import mods.ArchitectTable.client.ClientProxy;
+import mods.architecttable.client.ClientProxy;
+import mods.architecttable.table.TileEntityArchitectTable;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.creativetab.CreativeTabs;

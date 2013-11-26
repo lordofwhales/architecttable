@@ -1,10 +1,11 @@
-package mods.ArchitectTable.client;
+package mods.architecttable.client;
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 
-import mods.ArchitectTable.ContainerArchitectTable;
-import mods.ArchitectTable.TileEntityArchitectTable;
+import mods.architecttable.IntPacket;
+import mods.architecttable.table.ContainerArchitectTable;
+import mods.architecttable.table.TileEntityArchitectTable;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
@@ -25,14 +26,6 @@ public class ArchitectTableGUI extends GuiContainer {
 		ySize+=40;
 	}
 	
-	/*@Override public void initGui() {
-		super.initGui();
-		buttonList.add(new GuiButton(0, 108, 20, 11, 11, " W "));
-	}
-	@Override protected void actionPerformed(GuiButton button) {
-		System.out.println("Button");
-		tileEntity.write = true;
-	}*/
 	@Override protected void drawGuiContainerForegroundLayer(int useless,int vars) {
 		fontRenderer.drawString("Architect Table", 6, 6, 0x404040);
 	}
@@ -46,39 +39,14 @@ public class ArchitectTableGUI extends GuiContainer {
 	}
 	
 	@Override protected void mouseClicked(int x, int y, int button) {
-		if(button==0) {
-			int nx = x - (width-xSize)/2,
-				ny = y - (height-ySize)/2;
-			if(108<=nx && nx<=117 && 21<=ny && ny<=30) {
-				this.drawTexturedModalRect((width-xSize)/2+108, (height-ySize)/2+21, 176, 0, 10, 10);
-				ByteArrayOutputStream bos = new ByteArrayOutputStream(12);
-				DataOutputStream dos = new DataOutputStream(bos);
-				try {
-					dos.writeInt(tileEntity.xCoord);
-					dos.writeInt(tileEntity.yCoord);
-					dos.writeInt(tileEntity.zCoord);
-				} catch(Exception e) { e.printStackTrace(); }
-				Packet250CustomPayload packet = new Packet250CustomPayload();
-				packet.channel = "ATBlueprint";
-				packet.data = bos.toByteArray();
-				packet.length = bos.size();
-				PacketDispatcher.sendPacketToServer(packet);
-			}
+		int nx = x - (width-xSize) / 2,
+			ny = y - (height-ySize) / 2;
+		if(108<=nx && nx<=117 && 21<=ny && ny<=30) {
+			this.drawTexturedModalRect((width-xSize)/2+108, (height-ySize)/2+21, 176, 0, 10, 10);
+			int tx = tileEntity.xCoord, ty = tileEntity.yCoord, tz = tileEntity.zCoord;
+			IntPacket.createAndSendWithData("ATBlueprint", tx, ty, tz);
 		}
+		
 		super.mouseClicked(x, y, button);
     }
-	public void drawOkayItemStack(ItemStack stack, int slot) {
-		
-	}
-	private void drawOkayItemStack(ItemStack stack, int x, int y, float clear) {
-        GL11.glTranslatef(0.0F, 0.0F, 32.0F);
-        GL11.glColor4f(1.0f, 1.0f, 1.0f, clear);
-        this.zLevel = 200.0F;
-        itemRenderer.zLevel = 200.0F;
-        itemRenderer.renderItemAndEffectIntoGUI(this.fontRenderer, this.mc.renderEngine, stack, x, y);
-        itemRenderer.renderItemOverlayIntoGUI(this.fontRenderer, this.mc.renderEngine, stack, x, y);
-        this.zLevel = 0.0F;
-        itemRenderer.zLevel = 0.0F;
-    }
-
 }

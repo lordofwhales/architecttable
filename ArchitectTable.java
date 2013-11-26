@@ -1,5 +1,8 @@
-package mods.ArchitectTable;
+package mods.architecttable;
 
+import mods.architecttable.bag.ItemArchitectBag;
+import mods.architecttable.table.ArchitectTableBlock;
+import mods.architecttable.table.TileEntityArchitectTable;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.item.Item;
@@ -7,6 +10,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.Configuration;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.common.Mod;
+import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Init;
 import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.Mod.PreInit;
@@ -24,28 +28,30 @@ public class ArchitectTable {
 	@Instance
 	public static ArchitectTable instance;
 	
-	@SidedProxy(clientSide="mods.ArchitectTable.client.ClientProxy", serverSide="mods.ArchitectTable.CommonProxy")
+	@SidedProxy(clientSide="mods.architecttable.client.ClientProxy", serverSide="mods.architecttable.CommonProxy")
 	public static CommonProxy proxy;
 	
 	public int renderID;
 	public static Block table;
-	public static Item blueprint, clipboard;
+	public static Item blueprint, clipboard, archBag;
 	
-	@PreInit
+	@EventHandler
 	public void preInit(FMLPreInitializationEvent e) {
 		Configuration c = new Configuration(e.getSuggestedConfigurationFile());
 		int idTable		= c.getBlock("architectTable", 	700).getInt(),
 			idBlueprint	= c.getItem("blueprint", 9335).getInt(),
-			idClipboard	= c.getItem("clipboard", 9336).getInt();
+			idClipboard	= c.getItem("clipboard", 9336).getInt(),
+			idArchBag 	= c.getItem("architectBag", 9337).getInt();
 		table = new ArchitectTableBlock(idTable);
 		blueprint = new ItemBlueprint(idBlueprint);
 		clipboard = new ItemClipboard(idClipboard);
+		archBag = new ItemArchitectBag(idArchBag);
 		
 		renderID = RenderingRegistry.getNextAvailableRenderId();
 		proxy.registerRenders();
 	}
 	
-	@Init
+	@EventHandler
 	public void init(FMLInitializationEvent e) {
 		GameRegistry.registerBlock(table, "Architect Table");
 		GameRegistry.registerTileEntity(TileEntityArchitectTable.class, "robertwanATTileEntity");
@@ -54,6 +60,7 @@ public class ArchitectTable {
 		LanguageRegistry.addName(new ItemStack(blueprint,1,0),"Blank Blueprint");
 		LanguageRegistry.addName(new ItemStack(blueprint,1,1),"Blueprint");
 		LanguageRegistry.addName(clipboard,"Clipboard");
+		LanguageRegistry.addName(archBag, "Architect's Backpack");
 		NetworkRegistry.instance().registerGuiHandler(this, proxy);
 		NetworkRegistry.instance().registerChannel(new PacketHandler(), "ATBlueprint");
 		
@@ -70,6 +77,12 @@ public class ArchitectTable {
 				'i',new ItemStack(Item.ingotIron),
 				'p',new ItemStack(Item.paper),
 				'c',new ItemStack(Block.workbench));
+		GameRegistry.addRecipe(new ItemStack(archBag,1,0), "ege", "lal", "lcl",
+				'e',new ItemStack(Item.emerald),
+				'g',new ItemStack(Item.ingotGold),
+				'l',new ItemStack(Item.leather),
+				'a',new ItemStack(table),
+				'c',new ItemStack(Block.chest));
 		GameRegistry.addShapelessRecipe(new ItemStack(blueprint,1,0), new ItemStack(blueprint,1,1));
 	}
 }
